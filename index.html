@@ -1,282 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Grand Royale Hotel</title>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --gold:#C9A84C;--gold-light:#E8C97A;--gold-dark:#9A7A30;
-    --bg:#0F0D0A;--bg2:#1A1712;--bg3:#232018;--bg4:#2C2820;
-    --text:#F5EDD6;--text2:#B8A882;--text3:#7A6E56;
-    --border:rgba(201,168,76,0.2);--border2:rgba(201,168,76,0.4);
-  }
-  #app{background:var(--bg);min-height:100vh;font-family:'Inter',sans-serif;color:var(--text);max-width:400px;margin:0 auto;position:relative;padding-bottom:80px}
-  .header{background:var(--bg2);border-bottom:1px solid var(--border2);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-  .logo{display:flex;align-items:center;gap:8px}
-  .crown{color:var(--gold);font-size:18px}
-  .hotel-name{font-family:'Playfair Display',serif;font-size:13px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:600}
-  .menu-btn{color:var(--text2);font-size:18px;background:none;border:none;cursor:pointer;padding:4px}
-  .tabs{background:var(--bg2);padding:10px 16px 12px;border-bottom:1px solid var(--border);position:sticky;top:57px;z-index:9;display:flex;gap:8px}
-  .tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;letter-spacing:.5px;white-space:nowrap}
-  .tab.active{background:var(--gold);border-color:var(--gold);color:#1a1200;font-weight:500}
-  .section-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--text);padding:18px 16px 14px;font-weight:400}
-  .category-tabs{display:flex;gap:8px;overflow-x:auto;padding:0 16px 14px;scrollbar-width:none}
-  .category-tabs::-webkit-scrollbar{display:none}
-  .cat-tab{padding:5px 14px;border-radius:16px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap;letter-spacing:.5px}
-  .cat-tab.active{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold)}
-  .menu-grid{padding:0 16px;display:grid;gap:12px}
-  .item-full{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s}
-  .item-full:hover{border-color:var(--border2);transform:translateY(-1px)}
-  .item-img-full{width:100%;height:160px;object-fit:cover;display:block;background:var(--bg3)}
-  .item-img-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;font-size:48px;background:linear-gradient(135deg,var(--bg3),var(--bg4))}
-  .item-info{padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
-  .item-name{font-size:14px;color:var(--text);font-weight:500;letter-spacing:.3px}
-  .item-price{font-size:13px;color:var(--gold);font-weight:500;font-family:'Playfair Display',serif}
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .item-half{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s}
-  .item-half:hover{border-color:var(--border2);transform:translateY(-1px)}
-  .item-img-half{width:100%;height:110px;object-fit:cover;display:block;background:var(--bg3)}
-  .item-img-half-placeholder{width:100%;height:110px;display:flex;align-items:center;justify-content:center;font-size:32px;background:linear-gradient(135deg,var(--bg3),var(--bg4))}
-  .item-info-half{padding:8px 10px 10px;display:flex;align-items:center;justify-content:space-between;gap:4px}
-  .item-name-half{font-size:12px;color:var(--text);font-weight:500;line-height:1.3;flex:1}
-  .item-price-half{font-size:11px;color:var(--gold);font-weight:500;font-family:'Playfair Display',serif;white-space:nowrap}
-  .add-btn{width:28px;height:28px;border-radius:50%;background:var(--gold);border:none;color:#1a1200;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:400;transition:transform .15s,background .15s;flex-shrink:0}
-  .add-btn:hover{background:var(--gold-light);transform:scale(1.1)}
-  .add-btn.active{background:var(--bg3);border:1px solid var(--gold);color:var(--gold)}
-  .qty-ctrl{display:flex;align-items:center;gap:4px;background:var(--bg3);border-radius:20px;border:1px solid var(--border2);padding:2px 6px}
-  .qty-btn{background:none;border:none;color:var(--gold);font-size:16px;cursor:pointer;padding:0 3px;line-height:1;font-weight:300}
-  .qty-num{font-size:13px;color:var(--text);min-width:16px;text-align:center;font-weight:500}
-  .divider{height:1px;background:var(--border);margin:8px 16px}
-  .cart-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:400px;background:var(--bg2);border-top:1px solid var(--border2);padding:12px 16px;display:flex;align-items:center;gap:12px;z-index:20}
-  .cart-info{display:flex;align-items:center;gap:10px;flex:1}
-  .cart-icon{color:var(--gold);font-size:20px}
-  .cart-count{font-size:12px;color:var(--text2)}
-  .cart-total{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);font-weight:600}
-  .view-cart-btn{background:var(--gold);color:#1a1200;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:.5px;transition:background .2s}
-  .view-cart-btn:hover{background:var(--gold-light)}
-  .fade-in{animation:fadeIn .3s ease}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  .tag{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;letter-spacing:.5px;margin-bottom:4px}
-  .tag-veg{background:rgba(44,160,44,.15);color:#7ec87e;border:1px solid rgba(44,160,44,.3)}
-  .tag-spicy{background:rgba(210,60,30,.12);color:#e87050;border:1px solid rgba(210,60,30,.25)}
-  .tag-popular{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
-</style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap');
 
-<h2 class="sr-only">Grand Royale Hotel digital menu ordering app</h2>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-dark:#9A7A30;
+  --bg:#0F0D0A;--bg2:#1A1712;--bg3:#232018;--bg4:#2C2820;
+  --text:#F5EDD6;--text2:#B8A882;--text3:#7A6E56;
+  --border:rgba(201,168,76,0.2);--border2:rgba(201,168,76,0.4);
+}
+
+body{
+  background:var(--bg);
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+}
+
+#app{
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:0 20px;
+}
+
+/* HEADER */
+.header{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border2);
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.logo{display:flex;align-items:center;gap:8px}
+.crown{color:var(--gold)}
+.hotel-name{
+  font-family:'Playfair Display',serif;
+  font-size:14px;
+  letter-spacing:2px;
+  color:var(--gold);
+}
+
+.tabs{
+  background:var(--bg2);
+  padding:10px 20px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--border);
+}
+
+.tab{
+  padding:6px 14px;
+  border-radius:20px;
+  border:1px solid var(--border2);
+  background:none;
+  color:var(--text2);
+  cursor:pointer;
+}
+
+.tab.active{
+  background:var(--gold);
+  color:#000;
+}
+
+/* CATEGORY */
+.category-tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:10px 0;
+}
+
+.cat-tab{
+  padding:5px 12px;
+  border-radius:20px;
+  border:1px solid var(--border2);
+  background:none;
+  color:var(--text2);
+  cursor:pointer;
+}
+
+.cat-tab.active{
+  background:var(--gold);
+  color:#000;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  gap:16px;
+  grid-template-columns:repeat(2,1fr);
+}
+
+@media(min-width:768px){
+  .grid{grid-template-columns:repeat(3,1fr);}
+}
+
+@media(min-width:1024px){
+  .grid{grid-template-columns:repeat(4,1fr);}
+}
+
+/* ITEM */
+.item{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.item-img{
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  background:var(--bg3);
+}
+
+.item-info{
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.add-btn{
+  background:var(--gold);
+  border:none;
+  padding:5px 10px;
+  cursor:pointer;
+}
+
+.cart-bar{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:var(--bg2);
+  padding:10px 20px;
+  display:flex;
+  justify-content:space-between;
+  border-top:1px solid var(--border2);
+}
+</style>
+</head>
+
+<body>
 
 <div id="app">
-  <div class="header">
-    <div class="logo">
-      <span class="crown">♛</span>
-      <span class="hotel-name">Grand Royale Hotel</span>
-    </div>
-    <button class="menu-btn">☰</button>
-  </div>
 
-  <div class="tabs" id="meal-tabs"></div>
-
-  <div id="menu-content"></div>
-
-  <div class="cart-bar">
-    <div class="cart-info">
-      <span class="cart-icon">🛒</span>
-      <div>
-        <div class="cart-count" id="cart-count">0 items</div>
-      </div>
-    </div>
-    <div class="cart-total" id="cart-total">₹0.00</div>
-    <button class="view-cart-btn" id="view-cart-btn">View Cart</button>
+<div class="header">
+  <div class="logo">
+    <span class="crown">♛</span>
+    <span class="hotel-name">Premium Digital Menu and Hospitality Interface</span>
   </div>
 </div>
 
+<div class="tabs" id="tabs"></div>
+
+<div class="container">
+  <div id="menu"></div>
+</div>
+
+<div class="cart-bar">
+  <span id="count">0 items</span>
+  <span id="total">₹0</span>
+</div>
+
+</div>
+
 <script>
-const meals = ['Breakfast','Lunch','Dinner','Drinks'];
-const menuData = {
-  Breakfast: {
-    categories: ['All','Indian','Chinese','Rajasthani'],
-    items: [
-      {id:1,name:'Butter Chicken',price:349,cat:'Indian',emoji:'🍛',tags:['spicy'],featured:true},
-      {id:2,name:'Paneer Butter Masala',price:299,cat:'Indian',emoji:'🥘',tags:['veg']},
-      {id:3,name:'Biryani',price:349,cat:'Indian',emoji:'🍚',tags:['popular']},
-      {id:4,name:'Dal Makhani',price:229,cat:'Indian',emoji:'🫕',tags:['veg']},
-      {id:5,name:'Garlic Naan',price:99,cat:'Indian',emoji:'🫓',tags:['veg']},
-      {id:6,name:'Chicken Fried Rice',price:299,cat:'Chinese',emoji:'🍳',tags:['popular']},
-      {id:7,name:'Veg Hakka Noodles',price:249,cat:'Chinese',emoji:'🍜',tags:['veg']},
-      {id:8,name:'Chilli Chicken',price:299,cat:'Chinese',emoji:'🌶️',tags:['spicy']},
-      {id:9,name:'Spring Rolls',price:229,cat:'Chinese',emoji:'🥢',tags:['veg']},
-      {id:10,name:'Manchurian',price:259,cat:'Chinese',emoji:'🍲',tags:[]},
-      {id:11,name:'Kung Pao Chicken',price:349,cat:'Chinese',emoji:'🔥',tags:['spicy']},
-      {id:12,name:'Rajasthani Thali',price:499,cat:'Rajasthani',emoji:'🍽️',tags:['popular'],featured:true},
-      {id:13,name:'Dal Baati Churma',price:279,cat:'Rajasthani',emoji:'🫙',tags:['veg','popular']},
-      {id:14,name:'Laal Maas',price:399,cat:'Rajasthani',emoji:'🥩',tags:['spicy']},
-      {id:15,name:'Ker Sangri',price:229,cat:'Rajasthani',emoji:'🌿',tags:['veg']},
-      {id:16,name:'Mirchi Vada',price:199,cat:'Rajasthani',emoji:'🫑',tags:['veg','spicy']},
-    ]
-  },
-  Lunch: {
-    categories: ['All','Starters','Mains','Breads'],
-    items: [
-      {id:17,name:'Tandoori Platter',price:549,cat:'Starters',emoji:'🍗',tags:['popular']},
-      {id:18,name:'Seekh Kebab',price:349,cat:'Starters',emoji:'🍢',tags:['spicy']},
-      {id:19,name:'Hara Bhara Kabab',price:249,cat:'Starters',emoji:'🟢',tags:['veg']},
-      {id:20,name:'Mutton Rogan Josh',price:449,cat:'Mains',emoji:'🍖',tags:['spicy']},
-      {id:21,name:'Shahi Paneer',price:329,cat:'Mains',emoji:'🧀',tags:['veg','popular']},
-      {id:22,name:'Fish Curry',price:399,cat:'Mains',emoji:'🐟',tags:[]},
-      {id:23,name:'Butter Naan',price:79,cat:'Breads',emoji:'🫓',tags:['veg']},
-      {id:24,name:'Laccha Paratha',price:89,cat:'Breads',emoji:'🫓',tags:['veg']},
-    ]
-  },
-  Dinner: {
-    categories: ['All','Soups','Mains','Desserts'],
-    items: [
-      {id:25,name:'Tomato Shorba',price:149,cat:'Soups',emoji:'🍅',tags:['veg']},
-      {id:26,name:'Chicken Yakhni',price:199,cat:'Soups',emoji:'🍵',tags:[]},
-      {id:27,name:'Kadai Chicken',price:379,cat:'Mains',emoji:'🍳',tags:['spicy','popular']},
-      {id:28,name:'Veg Biryani',price:299,cat:'Mains',emoji:'🌾',tags:['veg']},
-      {id:29,name:'Gulab Jamun',price:149,cat:'Desserts',emoji:'🍮',tags:['veg','popular']},
-      {id:30,name:'Kheer',price:129,cat:'Desserts',emoji:'🥛',tags:['veg']},
-    ]
-  },
-  Drinks: {
-    categories: ['All','Mocktails','Hot','Lassi'],
-    items: [
-      {id:31,name:'Mango Lassi',price:149,cat:'Lassi',emoji:'🥭',tags:['veg','popular']},
-      {id:32,name:'Rose Sharbat',price:99,cat:'Mocktails',emoji:'🌹',tags:['veg']},
-      {id:33,name:'Masala Chai',price:79,cat:'Hot',emoji:'☕',tags:['veg']},
-      {id:34,name:'Filter Coffee',price:89,cat:'Hot',emoji:'☕',tags:['veg']},
-      {id:35,name:'Virgin Mojito',price:179,cat:'Mocktails',emoji:'🍃',tags:['veg','popular']},
-      {id:36,name:'Salted Lassi',price:99,cat:'Lassi',emoji:'🥛',tags:['veg']},
-    ]
-  }
+const meals=["Breakfast","Lunch","Dinner"];
+let active="Breakfast";
+let cart={};
+
+const data={
+Breakfast:[
+{name:"Paneer",price:200,src:"https://source.unsplash.com/400x300/?paneer",emoji:"🧀"
+},
+{name:"Biryani",price:300,src:"https://source.unsplash.com/400x300/?biryani",emoji:"🍚"},
+{name:"Noodles",price:150,src:"https://source.unsplash.com/400x300/?noodles",emoji:"🍜"},
+{name:"Dal",price:120,src:"https://source.unsplash.com/400x300/?dal",emoji:"🍲"}
+],
+Lunch:[
+{name:"Thali",price:400,src:"https://source.unsplash.com/400x300/?thali",emoji:"🍽️"},
+{name:"Chicken",price:350,src:"https://source.unsplash.com/400x300/?chicken",emoji:"🍗"}
+],
+Dinner:[
+{name:"Soup",price:150,src:"https://source.unsplash.com/400x300/?soup",emoji:"🍵"},
+{name:"Dessert",price:120,src:"https://source.unsplash.com/400x300/?dessert",emoji:"🍮"}
+]
 };
 
-let activeMeal = 'Breakfast';
-let activeCat = 'All';
-let cart = {};
-
-function getTotal(){
-  return Object.entries(cart).reduce((s,[id,q])=>{
-    const item = Object.values(menuData).flatMap(m=>m.items).find(i=>i.id==id);
-    return s + (item?item.price*q:0);
-  }, 0);
-}
-function getCount(){
-  return Object.values(cart).reduce((s,q)=>s+q,0);
-}
-function updateCartBar(){
-  const count = getCount();
-  document.getElementById('cart-count').textContent = count + (count===1?' item':' items');
-  document.getElementById('cart-total').textContent = '₹'+getTotal().toFixed(2);
-}
-
 function renderTabs(){
-  const el = document.getElementById('meal-tabs');
-  el.innerHTML = meals.map(m=>`<button class="tab${m===activeMeal?' active':''}" onclick="switchMeal('${m}')">${m}</button>`).join('');
+document.getElementById("tabs").innerHTML=
+meals.map(m=>`<button class="tab ${m===active?"active":""}" onclick="switchMeal('${m}')">${m}</button>`).join("");
 }
 
-function switchMeal(meal){
-  activeMeal=meal; activeCat='All';
-  renderTabs(); renderMenu();
-}
-function switchCat(cat){
-  activeCat=cat; renderMenu();
+function switchMeal(m){
+active=m;
+renderTabs();
+renderMenu();
 }
 
-function addItem(id){
-  cart[id]=(cart[id]||0)+1;
-  updateCartBar(); renderMenu();
-}
-function removeItem(id){
-  if(cart[id]>1) cart[id]--;
-  else delete cart[id];
-  updateCartBar(); renderMenu();
+function add(i){
+cart[i]=(cart[i]||0)+1;
+updateCart();
 }
 
-function renderQty(id){
-  const q = cart[id]||0;
-  if(q===0) return `<button class="add-btn" onclick="addItem(${id})">+</button>`;
-  return `<div class="qty-ctrl">
-    <button class="qty-btn" onclick="removeItem(${id})">−</button>
-    <span class="qty-num">${q}</span>
-    <button class="qty-btn" onclick="addItem(${id})">+</button>
-  </div>`;
-}
-
-function tagBadge(tag){
-  if(tag==='veg') return '<span class="tag tag-veg">VEG</span>';
-  if(tag==='spicy') return '<span class="tag tag-spicy">SPICY</span>';
-  if(tag==='popular') return '<span class="tag tag-popular">★ POPULAR</span>';
-  return '';
+function updateCart(){
+let count=0,total=0;
+Object.entries(cart).forEach(([i,q])=>{
+count+=q;
+total+=q*200;
+});
+document.getElementById("count").innerText=count+" items";
+document.getElementById("total").innerText="₹"+total;
 }
 
 function renderMenu(){
-  const data = menuData[activeMeal];
-  const filtered = activeCat==='All'?data.items:data.items.filter(i=>i.cat===activeCat);
-  const featured = filtered.filter(i=>i.featured);
-  const rest = filtered.filter(i=>!i.featured);
-
-  let html = `<div class="fade-in">`;
-
-  html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 16px 4px">
-    <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text);font-weight:400">${activeMeal} Menu</h2>
-  </div>`;
-
-  html += `<div class="category-tabs">` + data.categories.map(c=>
-    `<button class="cat-tab${c===activeCat?' active':''}" onclick="switchCat('${c}')">${c}</button>`
-  ).join('') + `</div>`;
-
-  if(featured.length){
-    featured.forEach(item=>{
-      html += `<div class="menu-grid" style="margin-bottom:12px"><div class="item-full">
-        <div class="item-img-placeholder" style="height:140px">${item.emoji}</div>
-        <div class="item-info">
-          <div>
-            <div style="margin-bottom:4px">${item.tags.map(tagBadge).join(' ')}</div>
-            <div class="item-name">${item.name}</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="item-price">₹${item.price}</span>
-            ${renderQty(item.id)}
-          </div>
-        </div>
-      </div></div>`;
-    });
-  }
-
-  if(rest.length){
-    html += `<div class="menu-grid"><div class="grid-2">`;
-    rest.forEach(item=>{
-      html += `<div class="item-half">
-        <div class="item-img-half-placeholder">${item.emoji}</div>
-        <div style="padding:8px 10px 4px">${item.tags.map(tagBadge).join(' ')}</div>
-        <div class="item-info-half">
-          <div style="flex:1">
-            <div class="item-name-half">${item.name}</div>
-            <div class="item-price-half">₹${item.price}</div>
-          </div>
-          ${renderQty(item.id)}
-        </div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  }
-
-  if(!filtered.length){
-    html += `<div style="text-align:center;padding:40px 16px;color:var(--text3);font-size:14px">No items in this category</div>`;
-  }
-
-  html += `</div>`;
-  document.getElementById('menu-content').innerHTML = html;
+document.getElementById("menu").innerHTML=
+`<div class="grid">
+${data[active].map((item,i)=>`
+<div class="item">
+<div class="item-img">${item.emoji}</div>
+<div class="item-info">
+<span>${item.name}</span>
+<button class="add-btn" onclick="add(${i})">+</button>
+</div>
+</div>`).join("")}
+</div>`;
 }
-
-document.getElementById('view-cart-btn').addEventListener('click',()=>{
-  const count = getCount();
-  if(count===0){alert('Your cart is empty. Add some items first!');return;}
-  const items = Object.entries(cart).map(([id,q])=>{
-    const item = Object.values(menuData).flatMap(m=>m.items).find(i=>i.id==id);
-    return `${item.emoji} ${item.name} x${q} — ₹${item.price*q}`;
-  }).join('\n');
-  alert(`🛒 Your Order (${count} items)\n\n${items}\n\n─────────────────\nTotal: ₹${getTotal().toFixed(2)}`);
-});
 
 renderTabs();
 renderMenu();
 </script>
+
+</body>
+</html>
